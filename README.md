@@ -1,47 +1,69 @@
 # Habit-Tracker
 
-Proyecto para la gestión de hábitos basado en el libro *Hábitos Atómicos* de James Clear.
+Este proyecto es una aplicación web para gestionar hábitos, inspirada en el libro *Hábitos Atómicos* de James Clear. La solución está dividida en dos partes:
+
+  - **Backend:** API desarrollada con Express.js y conectada a una base de datos MongoDB Atlas.
+  - **Frontend:** Aplicación web desarrollada con Next.js y Redux para el manejo del estado.
 
 ## Descripción
 
 Habit Tracker es una aplicación web que permite a los usuarios crear y gestionar sus hábitos diarios. Siguiendo la filosofía del libro, la aplicación ayuda a formar hábitos a través de pequeños pasos diarios. El usuario puede crear una cuenta, iniciar sesión, agregar hábitos y marcarlos como completados cada día. Si un hábito no se marca en algún día, el conteo se reinicia. Además, una barra de progreso visualiza el avance del usuario, cambiando de rojo a verde conforme se acerca a los 66 días.
+
+ ## Estructura del Proyecto
+
+  ```
+  proyecto-habitos/
+  ├── backend/         # API en Express.js
+  └── frontend/        # Aplicación en Next.js
+  ```
 
 ## Tecnologías Utilizadas
 
 - **Node.js & Express.js:** Framework para el backend.
 - **MongoDB Atlas:** Base de datos en la nube.
 - **Mongoose:** Librería para la conexión e interacción con MongoDB.
-- **Next.js:** (Se implementará en fases posteriores para el frontend).
+- **Next.js:** Framework para el frontend.
 
 ## Requisitos
 
-- Node.js (v12 o superior)
-- npm (v6 o superior)
-- Cuenta en MongoDB Atlas y cadena de conexión correspondiente
+- Node.js y npm instalados.
+- Cuenta en MongoDB Atlas y cadena de conexión correspondiente.
+- Conexión a internet para descargar dependencias.
 
-## Instalación
+### Backend
 
-1. **Clonar el repositorio:**
-   ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   ```
+1. Navega a la carpeta `backend`:
+  ```bash
+  cd backend
+  ```
+2. Instala las dependencias:
+  ```bash
+  npm install
+  ```
+3. Configura las variables de entorno creando un archivo `.env` con la cadena de conexión a MongoDB:
+  ```
+  MONGO_URI=mongodb+srv://<usuario>:<password>@<cluster-url>/<dbname>?retryWrites=true&w=majority
+  ```
+4. Inicia el servidor:
+  ```bash
+  npm run dev
+  ```
+  El servidor se ejecutará por defecto en el puerto `3000`.
 
-2. **Navegar al directorio del proyecto:**
-   ```bash
-   cd nombre-del-proyecto
-   ```
+### Frontend
 
-3. **Instalar las dependencias:**
-   ```bash
-   npm install
-   ```
-
-4. **Configurar las variables de entorno:**
-   - Crear un archivo `.env` en la raíz del proyecto.
-   - Agregar la siguiente línea con tu cadena de conexión a MongoDB Atlas:
-     ```
-     MONGO_URI=mongodb+srv://<usuario>:<password>@<cluster-url>/<dbname>?retryWrites=true&w=majority
-     ```
+1. Navega a la carpeta `frontend`:
+  ```bash
+  cd frontend
+  ```
+2. Instala las dependencias:
+  ```bash
+  npm install
+  ```
+3. Inicia la aplicación Next.js:
+  ```bash
+  npm run dev
+  ```
 
 ## Ejecución
 
