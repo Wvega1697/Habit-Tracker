@@ -1,29 +1,23 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// pages/index.js
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { fetchHabits } from '../slices/habitsSlice';
+import HabitList from '../components/HabitList';
+import ProgressBar from '../components/ProgressBar';
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { habits, status, error } = useSelector((state) => state.habits);
 
   useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchHabits());
-    }
-  }, [status, dispatch]);
+    // Disparar la acción para obtener los hábitos al cargar la página
+    dispatch(fetchHabits());
+  }, [dispatch]);
 
   return (
-    <div>
-      <h1>Lista de Hábitos</h1>
-      {status === 'loading' && <p>Cargando...</p>}
-      {status === 'failed' && <p>Error: {error}</p>}
-      {status === 'succeeded' && (
-        <ul>
-          {habits.map((habit) => (
-            <li key={habit._id}>{habit.name}</li>
-          ))}
-        </ul>
-      )}
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Gestor de Hábitos</h1>
+      <ProgressBar />
+      <HabitList />
     </div>
   );
 }
