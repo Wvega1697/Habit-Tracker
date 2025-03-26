@@ -35,4 +35,30 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Obtener hábitos del usuario
+router.get('/', async (req, res) => {
+  const habits = await Habit.find({ userId: req.user.id });
+  res.json(habits);
+});
+
+// Marcar hábito como completado
+router.patch('/:id/done', async (req, res) => {
+  const habit = await Habit.findById(req.params.id);
+  if (!habit) return res.status(404).json({ message: 'Hábito no encontrado' });
+
+  habit.markDone();
+  await habit.save();
+  res.json(habit);
+});
+
+// Reiniciar racha
+router.patch('/:id/reset', async (req, res) => {
+  const habit = await Habit.findById(req.params.id);
+  if (!habit) return res.status(404).json({ message: 'Hábito no encontrado' });
+
+  habit.streak = 0;
+  await habit.save();
+  res.json(habit);
+});
+
 module.exports = router;
