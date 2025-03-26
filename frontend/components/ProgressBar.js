@@ -1,10 +1,10 @@
-import React from 'react';
+const ProgressBar = ({ streak }) => {
+  const percentage = (streak / 66) * 100;
+  const color = percentage < 33 ? 'red' : percentage < 66 ? 'yellow' : 'green';
 
-const ProgressBar = () => {
   return (
-    <div className="w-full bg-red-200 rounded-full h-4 my-4">
-      {/* Barra estática, por ejemplo, 50% de progreso */}
-      <div className="bg-green-500 h-4 rounded-full" style={{ width: '50%' }}></div>
+    <div className="w-full bg-gray-200 rounded">
+      <div className={`h-4 rounded bg-${color}-500`} style={{ width: `${percentage}%` }}></div>
     </div>
   );
 };
