@@ -1,64 +1,62 @@
 const express = require('express');
-const router = express.Router();
 const Habit = require('../models/Habit');
+const auth = require('../middleware/auth');
 
-// Endpoint para crear un hábito
-router.post('/', async (req, res) => {
+const router = express.Router();
+
+// Obtener hábitos del usuario autenticado
+router.get('/', auth, async (req, res) => {
   try {
-    const habit = new Habit(req.body);
-    const savedHabit = await habit.save();
-    res.status(201).json(savedHabit);
+    const habits = await Habit.find({ userId: req.user.id });
+    res.json(habits);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: 'Error al obtener los hábitos', error: error.message });
   }
 });
 
-// Endpoint para eliminar un hábito
-router.delete('/:id', async (req, res) => {
+// Agregar un nuevo hábito
+router.post('/', auth, async (req, res) => {
   try {
-    const deletedHabit = await Habit.findByIdAndDelete(req.params.id);
-    if (!deletedHabit) return res.status(404).json({ message: 'Hábito no encontrado' });
-    res.status(200).json({ message: 'Hábito eliminado' });
+    const { name } = req.body;
+    const newHabit = new Habit({
+      userId: req.user.id,
+      name,
+      streak: 0,
+      lastCompleted: null
+    });
+    await newHabit.save();
+    res.status(201).json(newHabit);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: 'Error al crear el hábito', error: error.message });
   }
 });
 
-// Endpoint para actualizar un hábito
-router.put('/:id', async (req, res) => {
+// Marcar hábito como completado (Done)
+router.patch('/:id/done', auth, async (req, res) => {
   try {
-    const updatedHabit = await Habit.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedHabit) return res.status(404).json({ message: 'Hábito no encontrado' });
-    res.status(200).json(updatedHabit);
+    const habit = await Habit.findById(req.params.id);
+    if (!habit) return res.status(404).json({ message: 'Hábito no encontrado' });
+
+    habit.markDone();
+    await habit.save();
+    res.json(habit);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: 'Error al actualizar el hábito', error: error.message });
   }
 });
 
-// Obtener hábitos del usuario
-router.get('/', async (req, res) => {
-  const habits = await Habit.find({ userId: req.user.id });
-  res.json(habits);
-});
+// Reiniciar racha de un hábito
+router.patch('/:id/reset', auth, async (req, res) => {
+  try {
+    const habit = await Habit.findById(req.params.id);
+    if (!habit) return res.status(404).json({ message: 'Hábito no encontrado' });
 
-// Marcar hábito como completado
-router.patch('/:id/done', async (req, res) => {
-  const habit = await Habit.findById(req.params.id);
-  if (!habit) return res.status(404).json({ message: 'Hábito no encontrado' });
-
-  habit.markDone();
-  await habit.save();
-  res.json(habit);
-});
-
-// Reiniciar racha
-router.patch('/:id/reset', async (req, res) => {
-  const habit = await Habit.findById(req.params.id);
-  if (!habit) return res.status(404).json({ message: 'Hábito no encontrado' });
-
-  habit.streak = 0;
-  await habit.save();
-  res.json(habit);
+    habit.streak = 0;
+    await habit.save();
+    res.json(habit);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al reiniciar el hábito', error: error.message });
+  }
 });
 
 module.exports = router;
